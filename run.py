@@ -1,3 +1,11 @@
-# Your code goes here.
-# You can delete these comments, but do not change the name of this file
-# Write your code to expect a terminal of 80 characters wide and 24 rows high
+# import random
+
+# Constants
+BOARD_SIZE = 10
+SHIP_TYPES = {
+    "Aircraft Carrier": 5,
+    "Battleship": 4,
+    "Submarine": 3,
+    "Destroyer": 3,
+    "Patrol Boat": 2,
+}

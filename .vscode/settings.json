@@ -1,12 +1,9 @@
 {
-   "python.linting.pylintEnabled": true,
-   "python.linting.enabled": true,
-   "python.linting.pycodestyleEnabled": false,
-   "python.linting.flake8Enabled": true,
-   "python.terminal.activateEnvironment": false,
-   "python.formatting.autopep8Path": "/home/gitpod/.pyenv/shims/autopep8",
-   "python.linting.flake8Path": "/home/gitpod/.pyenv/shims/flake8",
-   "cornflakes.linter.executablePath": "/home/gitpod/.pyenv/shims/flake8",
+   "terminal.integrated.tabs.defaultColor": "terminal.ansiMagenta",
+   "workbench.colorCustomizations": {
+      "terminal.foreground": "#c79bff",
+      "terminalCursor.foreground": "#c79bff"
+   },
    "files.exclude": {
       "**/.DS_Store": true,
       "**/.git": true,
@@ -20,7 +17,31 @@
       "**/core.python*": true,
       "**/CVS": true
    },
-   "files.autoSave": "off",
-   "workbench.colorTheme": "Visual Studio Dark",
-   "editor.defaultFormatter": "HookyQR.beautify"
+   "editor.fontSize": 16,
+   "editor.fontFamily": "ComicShannsMono Nerd Font Mono",
+   "editor.wordWrap": "on",
+   "editor.formatOnPaste": true,
+   "editor.formatOnSave": true,
+   "files.autoSave": "afterDelay",
+   "workbench.colorTheme": "Wildberries",
+   "editor.rulers": [
+      79
+   ],
+   "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+   "editor.guides.bracketPairs": "active",
+   "ruff.format.args": [
+      "line-length = 79"
+   ],
+   "[python]": {
+      "editor.formatOnSave": true,
+      "editor.formatOnPaste": true,
+      "editor.defaultFormatter": "charliermarsh.ruff",
+      "ruff.lint.run": "onSave",
+      "editor.tabSize": 4,
+      "editor.insertSpaces": true,
+      "editor.codeActionsOnSave": {
+         "source.fixAll": "always",
+         "source.organizeImports": true
+      }
+   }
 }
