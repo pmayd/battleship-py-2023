@@ -123,7 +123,7 @@ def display_rules():
     4. If a player's guess hits a ship, it's a "Hit!" and the opponent marks it as such.
         If it misses, it's a "Miss!" and the opponent marks it as such.
     5. The first player to sink all of the opponent's ships wins the game.
-    
+
     Have fun playing Battleship!
     """  # noqa violation_error
 
@@ -134,15 +134,15 @@ def display_rules():
 def show_start_menu():
     print(
         r"""
-   ____              __    __    ___                   __                 
-  /\  _`\           /\ \__/\ \__/\_ \                 /\ \      __           
-  \ \ \L\ \     __  \ \ ,_\ \ ,_\//\ \      __    ____\ \ \___ /\_\  _____   
-   \ \  _ <'  /'__`\ \ \ \/\ \ \/ \ \ \   /'__`\ /',__\\ \  _ `\/\ \/\ '__`\ 
+   ____              __    __    ___                   __
+  /\  _`\           /\ \__/\ \__/\_ \                 /\ \      __
+  \ \ \L\ \     __  \ \ ,_\ \ ,_\//\ \      __    ____\ \ \___ /\_\  _____
+   \ \  _ <'  /'__`\ \ \ \/\ \ \/ \ \ \   /'__`\ /',__\\ \  _ `\/\ \/\ '__`\
     \ \ \L\ \/\ \L\.\_\ \ \_\ \ \_ \_\ \_/\  __//\__, `\\ \ \ \ \ \ \ \ \L\ \\
      \ \____/\ \__/.\_\\ \__\\ \__\/\____\ \____\/\____/ \ \_\ \_\ \_\ \ ,__/
-      \/___/  \/__/\/_/ \/__/ \/__/\/____/\/____/\/___/   \/_/\/_/\/_/\ \ \/ 
-                                                                       \ \_\ 
-                                                   
+      \/___/  \/__/\/_/ \/__/ \/__/\/____/\/____/\/___/   \/_/\/_/\/_/\ \ \/
+                                                                       \ \_\
+
         Welcome to Battleship!
 
         1. Start Game
@@ -206,7 +206,10 @@ def start_game():
                     y = convert_alphabetic_to_numeric(y_input)
                 else:
                     print(
-                        "Please enter a single letter from A to J for the y-coordinate."
+                        """
+                        Please enter a single letter
+                        from A to J for the y-coordinate.
+                        """
                     )
                     continue
 
@@ -222,7 +225,9 @@ def start_game():
                     x = int(x_input)
                 except ValueError:
                     print(
-                        "Invalid x-coordinate. Please enter a number from 0 to 9."
+                        """Invalid x-coordinate.
+                        Please enter a number from 0 to 9.
+                        """
                     )
                     continue
 
