@@ -1,13 +1,19 @@
 import sys
 import random
 from colorama import Fore, Style, init
+import string
+import types
 
 # Initialize colorama
 init()
 
 # Constants
-BOARD_SIZE = 10
-SHIP_TYPES = {
+consts = types.SimpleNamespace()
+consts.CHAR_HIT = "X"
+consts.CHAR_WATER = "."
+consts.CHAR_MISS = "-"
+consts.BOARD_SIZE = 10
+consts.SHIP_TYPES = {
     "Aircraft Carrier": 5,
     "Battleship": 4,
     "Submarine": 3,
@@ -15,89 +21,89 @@ SHIP_TYPES = {
     "Patrol Boat": 2,
 }
 
+# Function to convert alphabetic y-coordinate to numeric coordinate
+def convert_alphabetic_to_numeric(letter: str):
+    return ord(letter.upper()) - ord("A")
 
 # Function to convert numeric y-coordinate to alphabetic coordinate
-def convert_numeric_to_alphabetic(numeric):
+def convert_numeric_to_alphabetic(numeric: int):
     return chr(ord("A") + numeric)
 
-
-# Function to convert alphabetic y-coordinate to numeric coordinate
-def convert_alphabetic_to_numeric(alphabetic):
-    return ord(alphabetic.upper()) - ord("A")
+def format_cell(cell: str, show_ships) -> str:
+    match cell:
+        case consts.CHAR_HIT: 
+            return Fore.RED + cell + Style.RESET_ALL
+        case consts.CHAR_MISS: 
+            return Fore.WHITE + cell + Style.RESET_ALL
+        case consts.CHAR_WATER: 
+            return Fore.CYAN + cell + Style.RESET_ALL
+        case _: 
+            return Fore.YELLOW + cell + Style.RESET_ALL if show_ships else Fore.CYAN + consts.CHAR_WATER + Style.RESET_ALL
 
 
 # Function to initialize an empty game board
 def initialize_board():
     board = []
-    for _ in range(BOARD_SIZE):
-        row = [Fore.CYAN + "O" + Style.RESET_ALL] * BOARD_SIZE
+    for _ in range(consts.BOARD_SIZE):
+        row = [consts.CHAR_WATER] * consts.BOARD_SIZE
         board.append(row)
     return board
 
 
 # Function to randomly place ships on the board
 def place_ships(board):
-    for ship, length in SHIP_TYPES.items():
+    for ship, length in consts.SHIP_TYPES.items():
         placed = False
         while not placed:
-            x = random.randint(0, BOARD_SIZE - 1)
-            y = random.randint(0, BOARD_SIZE - 1)
+            x = random.randint(0, consts.BOARD_SIZE - 1)
+            y = random.randint(0, consts.BOARD_SIZE - 1)
             orientation = random.choice(["horizontal", "vertical"])
-            if orientation == "horizontal" and x + length <= BOARD_SIZE:
+            if orientation == "horizontal" and x + length <= consts.BOARD_SIZE:
                 valid = True
                 for i in range(length):
-                    if board[y][x + i] != Fore.CYAN + "O" + Style.RESET_ALL:
+                    if board[y][x + i] != consts.CHAR_WATER:
                         valid = False
                         break
                 if valid:
                     for i in range(length):
-                        board[y][x + i] = (
-                            Fore.YELLOW + ship[0] + Style.RESET_ALL
-                        )
+                        board[y][x + i] = ship[0]
                     placed = True
-            elif orientation == "vertical" and y + length <= BOARD_SIZE:
+            elif orientation == "vertical" and y + length <= consts.BOARD_SIZE:
                 valid = True
                 for i in range(length):
-                    if board[y + i][x] != Fore.CYAN + "O" + Style.RESET_ALL:
+                    if board[y + i][x] != consts.CHAR_WATER:
                         valid = False
                         break
                 if valid:
                     for i in range(length):
-                        board[y + i][x] = (
-                            Fore.YELLOW + ship[0] + Style.RESET_ALL
-                        )
+                        board[y + i][x] = ship[0]
                     placed = True
 
 
 # Function to print the player and computer boards side by side
-def print_board(player_board, computer_board, show_ships=False):
+def print_board(player_board, computer_board):
     print("Player's Board    Computer's Board")
     print(
         "  "
-        + " ".join(str(i) for i in range(BOARD_SIZE))
+        + " ".join(str(i) for i in range(consts.BOARD_SIZE))
         + "       "
-        + " ".join(str(i) for i in range(BOARD_SIZE))
+        + " ".join(str(i) for i in range(consts.BOARD_SIZE))
     )
     for i, (player_row, computer_row) in enumerate(
         zip(player_board, computer_board)
-    ):
+    ):  
+        player_row_display = [
+            format_cell(cell, True) for cell in player_row
+        ]
         computer_row_display = [
-            cell
-            if cell.startswith(Fore.RED) or cell.startswith(Fore.WHITE)
-            else (Fore.CYAN + "O" + Style.RESET_ALL)
+            format_cell(cell, False)
             for cell in computer_row
         ]
-        if not show_ships:
-            computer_row_display = [
-                cell
-                if cell.startswith(Fore.RED) or cell.startswith(Fore.WHITE)
-                else Fore.CYAN + "O" + Style.RESET_ALL
-                for cell in computer_row
-            ]
+        
         print(
             convert_numeric_to_alphabetic(i)
             + " "
-            + " ".join(player_row)
+            + " ".join(player_row_display)
             + "     "
             + convert_numeric_to_alphabetic(i)
             + " "
@@ -107,7 +113,7 @@ def print_board(player_board, computer_board, show_ships=False):
 
 # Function to check if a position is valid on the board
 def is_valid_position(x, y):
-    return 0 <= x < BOARD_SIZE and 0 <= y < BOARD_SIZE
+    return 0 <= x < consts.BOARD_SIZE and 0 <= y < consts.BOARD_SIZE
 
 
 # Function to display game rules
@@ -232,19 +238,19 @@ def start_game():
                     player_shot_valid = True
 
                 # Check for hit or miss
-                if computer_board[y][x] != Fore.CYAN + "O" + Style.RESET_ALL:
+                if computer_board[y][x] != consts.CHAR_WATER:
                     print("Hit!")
-                    computer_board[y][x] = Fore.RED + "X" + Style.RESET_ALL
+                    computer_board[y][x] = consts.CHAR_HIT
                 else:
                     print("Miss!")
-                    computer_board[y][x] = Fore.WHITE + "-" + Style.RESET_ALL
+                    computer_board[y][x] = consts.CHAR_MISS
 
                 # Check if player has won
                 if all(
-                    Fore.RED + "X" + Style.RESET_ALL in cell
+                    consts.CHAR_HIT in cell
                     for row in computer_board
                     for cell in row
-                    if cell.startswith(Fore.YELLOW)
+                    if cell not in [consts.CHAR_WATER, consts.CHAR_MISS, consts.CHAR_HIT]
                 ):
                     print_board(player_board, computer_board)
                     print("Congratulations! You won!")
@@ -258,25 +264,25 @@ def start_game():
             computer_shot_valid = False
             while not computer_shot_valid:
                 x, y = (
-                    random.randint(0, BOARD_SIZE - 1),
-                    random.randint(0, BOARD_SIZE - 1),
+                    random.randint(0, consts.BOARD_SIZE - 1),
+                    random.randint(0, consts.BOARD_SIZE - 1),
                 )
                 if (x, y) not in used_coordinates_computer:
                     used_coordinates_computer.append((x, y))
                     computer_shot_valid = True
                     print(
-                        f"Computer targeted {convert_numeric_to_alphabetic(x)}{y}"
+                        f"Computer targeted {convert_numeric_to_alphabetic(y)}{x}"
                     )
 
             # Check for hit or miss
-            if player_board[y][x] != Fore.CYAN + "O" + Style.RESET_ALL:
+            if player_board[y][x] != Fore.CYAN + consts.CHAR_WATER + Style.RESET_ALL:
                 print(
                     "Computer hit your ship "
                     + convert_numeric_to_alphabetic(y)
                     + str(x)
                     + "!"
                 )
-                player_board[y][x] = Fore.RED + "X" + Style.RESET_ALL
+                player_board[y][x] = consts.CHAR_HIT
             else:
                 print(
                     "Computer missed "
@@ -284,14 +290,14 @@ def start_game():
                     + str(x)
                     + "!"
                 )
-                player_board[y][x] = Fore.WHITE + "-" + Style.RESET_ALL
+                player_board[y][x] = consts.CHAR_MISS
 
             # Check if computer has won
             if all(
-                Fore.RED + "X" + Style.RESET_ALL in cell
+                consts.CHAR_HIT in cell
                 for row in player_board
                 for cell in row
-                if cell.startswith(Fore.YELLOW)
+                if cell not in [consts.CHAR_WATER, consts.CHAR_MISS, consts.CHAR_HIT]
             ):
                 print_board(player_board, computer_board)
                 print("Game Over! Computer won!")
